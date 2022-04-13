@@ -2,13 +2,11 @@ const mongoose = require('mongoose');
 
 const purchaseSchema = mongoose.Schema({
 
-/*  For testing purposes on Postman
-    text: {
-        type: String,
-        required: [true, 'Please add a text value'],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User',
     }, 
-*/
-
     title: {
         type: String,
         required: [true, 'Please add a title'],
@@ -18,7 +16,7 @@ const purchaseSchema = mongoose.Schema({
         unique: false,
         required: [true, 'Please add a year of release'],
         min: 1900,
-        max: new Date().getFullYear()
+        max: new Date().getFullYear(),
     },
     producer: {
         type: String,
@@ -52,7 +50,7 @@ const purchaseSchema = mongoose.Schema({
     },
     requestorEmail: {
         type: String,
-        unique: true,
+        unique: false,
         required: [true, 'Please enter the requestor email'],
     },
     requestorDepartment: {
@@ -72,6 +70,6 @@ const purchaseSchema = mongoose.Schema({
         required: false,
     },
 },
-     { timestamp: true })
+     { timestamps: true })
 
 module.exports = mongoose.model('Purchase', purchaseSchema)
