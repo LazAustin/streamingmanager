@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Purchase = require('../models/purchaseModel') //Purchase is nickname for JSON Array/Schema in purchaseModel.js
+const User = require('../models/userModel')
 
 
 
@@ -8,7 +9,7 @@ const Purchase = require('../models/purchaseModel') //Purchase is nickname for J
 //Private
 //requests and responds/displays all purchases in db
 const getPurchases = asyncHandler(async (req, res) => {
-    const purchases = await Purchase.find()
+    const purchases = await Purchase.find({user: req.user.id})
 
     res.status(200).json(purchases)
 })
@@ -20,17 +21,21 @@ const getPurchases = asyncHandler(async (req, res) => {
 const setPurchases = asyncHandler(async (req, res) => {
     
     const {title, year, producer, director, licenseStart, licenseEnd, platform, requestorName, requestorEmail, requestorDepartment, price, notes} = req.body
-        
+            
     if (!title || !year || !producer || !director || !licenseStart || !licenseEnd|| !platform || !requestorName || !requestorEmail || !requestorDepartment || !price || !notes){
         res.status(400)
         throw new Error('Please fill in all the fields')
     }
 
-    const purchase = await Purchase.create(req.body
+    const purchase = await Purchase.create(Object.assign({user:req.user.id}, req.body));
+        //Is there another wait to write Object.assign({user: req.user.id})? Save for later. It works fine for now
+        //another method for performing this operation: const savedPurchase = await newPurchase.save();
         //fields in the Purchase Model/JSON Array/Schema in models/purchaseModels.js
         //instantiates new Purchase
-        
-     /* title: req.body.title,
+        // below is how originally I had to pass objects to .create() before I used Object.assign({}) for the user
+     
+        /* user: req.user.id
+        title: req.body.title,
         year: req.body.year,
         producer: req.body.producer,
         director: req.body.director,
@@ -42,7 +47,7 @@ const setPurchases = asyncHandler(async (req, res) => {
         requestorDepartment: req.body.requestorDepartment,
         price: req.body.price,
         notes: req.body.notes */
-    )
+    
     res.status(200).json(purchase) 
 })
 
@@ -56,6 +61,20 @@ const updatePurchases = asyncHandler(async (req, res) => {
     if (!purchase){
     res.status(400)
     throw new Error('Purchase not found')
+    }
+
+    const user = await await User.findById(req.user.id)
+
+    //Check for user
+    if(!user) {
+        res.status(401)
+        throw new Erros('User not found')
+    }
+
+    //Make sure the user matches the purchases
+    if (purchase.user.toString() !==user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
     }
 
     const updatedPurchase = await Purchase.findByIdAndUpdate(req.params.id, req.body, {
@@ -75,6 +94,20 @@ const deletePurchases = asyncHandler(async (req, res) => {
     if (!purchase) {
         res.status(400)
         throw new Error('Purchase not found')
+    }
+
+const user = await await User.findById(req.user.id)
+
+    //Check for user
+    if (!user) {
+        res.status(401)
+        throw new Erros('User not found')
+    }
+
+    //Make sure the user matches the purchases
+    if (purchase.user.toString() !==user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
     }
 
     await purchase.remove()
