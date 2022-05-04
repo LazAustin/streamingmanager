@@ -35,14 +35,14 @@ const registerUser = asyncHandler(async (req, res) => {
         name,
         email,
         password: hashedPassword,
-        token: generateToken(user._id)
     })
 
     if(user){
         res.status(201).json({
             _id: user.id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            token: generateToken(user._id)
         })
     } else {
         res.status(400)
@@ -50,7 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 })
 
-module.exports = {registerUser}
+
 
 
 //Authenticate a user
@@ -80,12 +80,11 @@ const loginUser = asyncHandler(async (req, res) => {
 //GET  /api/users/me
 //Private
 const getMe = asyncHandler(async (req, res) => {
-    const {_id, name, email} = await User.findById(req.user.id)
-    res.status(200).json({
-        id: _id,
-        name,
-        email,
-    })
+    
+    //const {_id, name, email} = await User.findById(req.user.id)
+    
+    res.status(200).json(req.user)
+
 })
 
 //Generate JWT

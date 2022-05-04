@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const opts = { toJSON: { virtuals: true } };
 
 const purchaseSchema = mongoose.Schema({
 
@@ -28,38 +29,45 @@ const purchaseSchema = mongoose.Schema({
         unique: false,
         required: false,
     },
-    licenseStart: {
-        type: Date,
+    length: {
+        type: String,
         unique: false,
-        required: [true, 'Please enter the date the license starts'],
+        required: false
     },
-    licenseEnd: {
-        type: Date,
-        unique: false,
-        required: [true, 'Please enter the date the license ends'],
-    },
+    //Using length instead for testing purposes until i code the if statements for license start and end with the radio buttons and custom range
+    // licenseStart: {
+    //     type: Date,
+    //     unique: false,
+    //     required: [true, 'Please enter the date the license starts'],
+    // },
+    // licenseEnd: {
+    //     type: Date,
+    //     unique: false,
+    //     required: [true, 'Please enter the date the license ends'],
+    // },
     platform: {
         type: String,
         unique: false,
-        required: [true, 'Please enter the platform'],
+        required: false,
     },
-    requestorName: {
+    requesterName: {
         type: String,
         unique: false,
         required: [true, 'Please enter the faculty or staff member who requested this purchase'],
     },
-    requestorEmail: {
+    requesterEmail: {
         type: String,
         unique: false,
-        required: [true, 'Please enter the requestor email'],
+        required: [true, 'Please enter the requester email'],
     },
-    requestorDepartment: {
+    requesterDepartment: {
         type: String,
         unique: false,
-        required: [true, 'Please enter the requestor department'],
+        required: false,
+        //re add [true, 'Please enter the requester department']
     },
     price: {
-        type: Number,
+        type: String,
         unique: false,
         required: [true, 'Please enter the price'],
         min: 0
@@ -70,6 +78,7 @@ const purchaseSchema = mongoose.Schema({
         required: false,
     },
 },
-     { timestamps: true })
+     { timestamps: true },
+     opts)
 
 module.exports = mongoose.model('Purchase', purchaseSchema)

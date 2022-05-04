@@ -20,9 +20,9 @@ const getPurchases = asyncHandler(async (req, res) => {
 //Sends request to add completely new purchase and sends a json response with that added purchase 
 const setPurchases = asyncHandler(async (req, res) => {
     
-    const {title, year, producer, director, licenseStart, licenseEnd, platform, requestorName, requestorEmail, requestorDepartment, price, notes} = req.body
+    const {title, year, producer, director, length, platform, requesterName, requesterEmail, requesterDepartment, price, notes} = req.body
             
-    if (!title || !year || !producer || !director || !licenseStart || !licenseEnd|| !platform || !requestorName || !requestorEmail || !requestorDepartment || !price || !notes){
+    if (!title || !year || !producer || !director || !length || !requesterName || !requesterEmail || !price || !notes){
         res.status(400)
         throw new Error('Please fill in all the fields')
     }
@@ -63,16 +63,16 @@ const updatePurchases = asyncHandler(async (req, res) => {
     throw new Error('Purchase not found')
     }
 
-    const user = await await User.findById(req.user.id)
+    //const user = await User.findById(req.user.id)
 
     //Check for user
-    if(!user) {
+    if(!req.user) {
         res.status(401)
         throw new Erros('User not found')
     }
 
     //Make sure the user matches the purchases
-    if (purchase.user.toString() !==user.id) {
+    if (purchase.user.toString() !==req.user.id) {
         res.status(401)
         throw new Error('User not authorized')
     }
@@ -96,16 +96,16 @@ const deletePurchases = asyncHandler(async (req, res) => {
         throw new Error('Purchase not found')
     }
 
-const user = await await User.findById(req.user.id)
+    //const user = await User.findById(req.user.id)
 
     //Check for user
-    if (!user) {
+    if (!req.user) {
         res.status(401)
         throw new Erros('User not found')
     }
 
     //Make sure the user matches the purchases
-    if (purchase.user.toString() !==user.id) {
+    if (purchase.user.toString() !==req.user.id) {
         res.status(401)
         throw new Error('User not authorized')
     }
