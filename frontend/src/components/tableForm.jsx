@@ -10,7 +10,7 @@ const TableForm = () => {
   const [pageSize, setPageSize] = useState(10);
   
   const dispatch = useDispatch()
-  const {purchase, purchases, isError, message} = useSelector((state) => state.purchases)
+  const {purchases, isError, message} = useSelector((state) => state.purchases)
 
   useEffect(() => {
 
@@ -31,7 +31,7 @@ const TableForm = () => {
                 color="primary"
                 size="small"
                 style={{ margin: 0}}
-                onClick={() => {dispatch(deletePurchase())}}
+                onClick={() => {dispatch(deletePurchase(purchases.id))}}
             >
                  X           
             </Button>
@@ -58,7 +58,10 @@ const TableForm = () => {
         field: 'col5',
         headerName: 'Edit',
         width: 150,
-        renderCell: renderDetailsButton,
+        renderCell: (params) => {
+          console.log(params)
+          return renderDetailsButton(params.id)
+        },
         disableClickEventBubbling: true,
     },
     /*{

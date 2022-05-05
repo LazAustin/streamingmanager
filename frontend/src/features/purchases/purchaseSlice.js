@@ -103,7 +103,7 @@ export const purchaseSlice = createSlice({
             .addCase(deletePurchase.fulfilled, (state, action) => {
                 state.isLoading = false 
                 state.isSuccess = true
-                state.purchases = state.purchases.filter((purchases) => purchases._id !== action.payload.id)})
+                state.purchases = state.purchases.filter((purchases) => purchases._id !== action.payload._Sid)})
             .addCase(deletePurchase.rejected, (state, action) => {
                 state.isLoading = false 
                 state.isError = true
