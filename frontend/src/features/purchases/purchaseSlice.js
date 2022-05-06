@@ -30,7 +30,9 @@ export const createPurchase = createAsyncThunk(
 })
 
 //Get purchases
-export const getPurchases = createAsyncThunk('purchases/getAll', async(_, thunkAPI) => {
+export const getPurchases = createAsyncThunk(
+    'purchases/getAll', 
+    async(_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await purchaseService.getPurchases(token)
@@ -47,6 +49,24 @@ export const getPurchases = createAsyncThunk('purchases/getAll', async(_, thunkA
 
 //Delete Purchase
 export const deletePurchase = createAsyncThunk(
+    'purchases/delete', 
+    async (id, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await purchaseService.deletePurchase(id, token)
+    } catch (error) {
+        const message =
+            (error.response && 
+            error.response.data &&
+            error.response.data.message) ||
+            error.message ||
+            error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+//Update Purchase
+export const updatePurchase = createAsyncThunk(
     'purchases/delete', 
     async (id, thunkAPI) => {
     try {
@@ -103,7 +123,7 @@ export const purchaseSlice = createSlice({
             .addCase(deletePurchase.fulfilled, (state, action) => {
                 state.isLoading = false 
                 state.isSuccess = true
-                state.purchases = state.purchases.filter((purchases) => purchases._id !== action.payload._Sid)})
+                state.purchases = state.purchases.filter((purchases) => purchases._id !== action.payload.id)})
             .addCase(deletePurchase.rejected, (state, action) => {
                 state.isLoading = false 
                 state.isError = true

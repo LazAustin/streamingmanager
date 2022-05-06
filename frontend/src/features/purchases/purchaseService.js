@@ -42,10 +42,24 @@ const deletePurchase = async (purchaseId, token) => {
     return response.data
 }
 
+//Update Purchase
+const updatePurchase = async (purchaseId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    const response = await axios.delete(API_URL + purchaseId, config)
+
+    return response.data
+}
+
 const purchaseService = {
     createPurchase,
     getPurchases,
     deletePurchase,
+    updatePurchase
 }
 
 export default purchaseService

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
-import {getPurchases} from '../features/purchases/purchaseSlice'
+import {getPurchases, reset} from '../features/purchases/purchaseSlice'
 import {useSelector, useDispatch} from 'react-redux'
 import { Button } from '@mui/material'
 import {deletePurchase} from '../features/purchases/purchaseSlice'
@@ -9,8 +10,12 @@ const TableForm = () => {
 
   const [pageSize, setPageSize] = useState(10);
   
+  const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth)
+
   const {purchases, isError, message} = useSelector((state) => state.purchases)
+
 
   useEffect(() => {
 
@@ -18,11 +23,18 @@ const TableForm = () => {
       console.log(message);
     }
 
+    if (!user) {
+      navigate('/login')
+    }
+
     dispatch(getPurchases());
 
-  }, [isError, dispatch, message]);
 
-  const renderDetailsButton = () => {
+  }, [user, navigate, isError, message, dispatch])
+
+ 
+
+  const renderDetailsButton = (id) => {
     return (
         <strong>
             <Button
@@ -31,7 +43,9 @@ const TableForm = () => {
                 color="primary"
                 size="small"
                 style={{ margin: 0}}
-                onClick={() => {dispatch(deletePurchase(purchases.id))}}
+                onClick={() => {
+                  dispatch(deletePurchase(id));
+                }}
             >
                  X           
             </Button>

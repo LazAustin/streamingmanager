@@ -115,8 +115,8 @@ function PurchaseForm() {
   )
 }
 
-const platforms = ['Kanopy', 'Swank', 'Netflix', 'Self-hosted'];
+const platforms = ['Kanopy', 'Swank', 'Films on Demand', 'Direct from Distributor', 'Netflix', 'Hulu', 'Amazon Prime Video', 'Disney+', 'Paramount+', 'Self-hosted', 'Other (Please Specify in the Notes Below)'];
 
-const departments = ['Art','Biology','Chemisty','Engineering','English' ,'History','Physics','Psychology','Self-hosted'];
+const departments = ['Art','Biology','Chemisty','Engineering','English' ,'History','Physics','Psychology'];
 
 export default PurchaseForm
